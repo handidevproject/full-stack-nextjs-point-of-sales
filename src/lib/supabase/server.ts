@@ -33,11 +33,12 @@ type CreateClientOptions = {
  * const supabaseAdmin = createClient({ isAdmin: true });
  * const { data } = await supabaseAdmin.from('users').select('*'); // Melewati RLS
  */
-export function createClient({ isAdmin = false }: CreateClientOptions = {}) {
-  const cookieStore = cookies();
+export async function createClient({ isAdmin = false }: CreateClientOptions = {}) {
+  const cookieStore = await cookies();
 
   const { SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY } =
     environment;
+  console.log(SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY);
 
   // Validasi variabel lingkungan untuk mencegah error saat runtime
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {

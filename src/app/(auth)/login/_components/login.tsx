@@ -20,6 +20,7 @@ import { startTransition, useActionState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { login } from '../actions';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function Login() {
     const form = useForm<LoginForm>({
@@ -45,6 +46,9 @@ export default function Login() {
 
     useEffect(() => {
         if (loginState?.status === 'error') {
+            toast.error('Login Failed', {
+                description: loginState.errors?._form?.[0],
+            });
             startTransition(() => {
                 loginAction(null);
             });
