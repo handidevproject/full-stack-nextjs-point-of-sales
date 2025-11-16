@@ -1,92 +1,69 @@
+/**
+ * @file Utilitas untuk membuat Supabase client di lingkungan server Next.js.
+ */
+
 import { environment } from "@/configs/environment";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-/**
- * Opsi untuk pembuatan Supabase client di sisi server.
- */
 type CreateClientOptions = {
   /**
-   * Jika `true`, client akan dibuat dengan `SUPABASE_SERVICE_ROLE_KEY`
-   * yang memberikan hak akses penuh (bypass RLS). Gunakan dengan hati-hati.
-   * Jika `false` (default), client akan dibuat dengan `SUPABASE_ANON_KEY`
-   * yang tunduk pada Row Level Security (RLS).
+   * Jika `true`, client akan dibuat dengan hak akses admin (service role),
+   * yang dapat melewati Row Level Security (RLS). Gunakan dengan hati-hati.
+   * Defaultnya `false`.
    */
   isAdmin?: boolean;
 };
 
 /**
- * Membuat instance Supabase client untuk digunakan di sisi server (Server Components, Route Handlers, Server Actions).
+ * Membuat Supabase client untuk digunakan di sisi server (Server Components, Actions, Route Handlers).
  *
- * Fungsi ini secara dinamis membuat client Supabase yang sesuai dengan konteks server:
- * - Menggunakan `cookies()` dari `next/headers` untuk mengelola sesi pengguna secara aman.
- * - Dapat membuat client dengan hak akses admin (`service_role`) jika diperlukan,
- *   yang berguna untuk operasi yang memerlukan hak istimewa.
+ * Fungsi ini secara otomatis mengelola cookie untuk otentikasi.
  *
- * @param {CreateClientOptions} options - Opsi untuk mengonfigurasi client, seperti `isAdmin`.
- * @returns {SupabaseClient} Instance dari Supabase client untuk server.
+ * @param {CreateClientOptions} [options={}] - Opsi untuk pembuatan client.
+ * @returns Supabase client yang siap digunakan.
  *
  * @example
- * // Penggunaan standar di Server Component (sebagai pengguna biasa)
- * import { createClient } from '@/lib/supabase/server';
- *
- * const supabase = createClient({});
- * const { data: { user } } = await supabase.auth.getUser();
+ * // Membuat client standar (sebagai pengguna)
+ * const supabase = createClient();
+ * const { data } = await supabase.from('posts').select('*');
  *
  * @example
- * // Penggunaan sebagai admin (misalnya, di Route Handler untuk tugas internal)
- * import { createClient } from '@/lib/supabase/server';
- *
+ * // Membuat client dengan hak akses admin
  * const supabaseAdmin = createClient({ isAdmin: true });
- * // Operasi ini akan melewati RLS
- * const { data, error } = await supabaseAdmin.from('profiles').select('*');
+ * const { data } = await supabaseAdmin.from('users').select('*'); // Melewati RLS
  */
-export async function createClient({ isAdmin = false }: CreateClientOptions) {
-  // Mengambil cookie store dari Next.js. Ini hanya bisa dilakukan di lingkungan server.
-  const cookieStore = await cookies();
+export function createClient({ isAdmin = false }: CreateClientOptions = {}) {
+  const cookieStore = cookies();
 
   const { SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY } =
     environment;
 
-  // Validasi bahwa variabel lingkungan yang diperlukan tersedia.
-  // Ini mencegah error runtime yang tidak jelas jika variabel lupa diatur.
+  // Validasi variabel lingkungan untuk mencegah error saat runtime
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_SERVICE_ROLE_KEY) {
-    throw new Error(
-      "Supabase URL, Anon Key, and Service Role Key must be defined in environment variables."
-    );
+    throw new Error("Variabel lingkungan Supabase belum diatur dengan benar.");
   }
 
-  // Membuat instance Supabase client untuk server.
   return createServerClient(
     SUPABASE_URL,
-    // Memilih kunci API berdasarkan flag `isAdmin`.
-    // Gunakan service role key untuk hak akses admin, atau anon key untuk hak akses pengguna biasa.
     isAdmin ? SUPABASE_SERVICE_ROLE_KEY : SUPABASE_ANON_KEY,
     {
       cookies: {
-        /**
-         * Mengambil semua cookie dari cookie store.
-         * Supabase akan menggunakan ini untuk membaca sesi pengguna.
-         */
+        // Fungsi untuk mengambil cookie dari request
         getAll() {
           return cookieStore.getAll();
         },
-        /**
-         * Mengatur cookie yang diperbarui oleh Supabase.
-         * Ini akan menulis kembali cookie ke browser melalui Next.js.
-         */
+        // Fungsi untuk mengatur cookie di response
         setAll(
           cookiesToSet: { name: string; value: string; options: CookieOptions }[]
         ) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
           } catch (error) {
-            // Penanganan error jika `cookieStore.set` gagal.
-            // Ini bisa terjadi jika fungsi ini dipanggil di luar konteks request-response
-            // (misalnya, selama build time).
-            console.error("Error setting cookies:", cookiesToSet, error);
+            // Error ini bisa terjadi jika `set` dipanggil di luar konteks request,
+            // misalnya saat build. Cukup log error tanpa menghentikan aplikasi.
           }
         },
       },
