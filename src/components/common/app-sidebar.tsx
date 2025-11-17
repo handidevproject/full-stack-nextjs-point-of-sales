@@ -29,6 +29,7 @@ import {
 } from '@/constants/sidebar-constant';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import {signOut} from "@/actions/auth-session";
 
 export default function AppSidebar() {
     const { isMobile } = useSidebar();
@@ -94,7 +95,7 @@ export default function AppSidebar() {
                                         <AvatarFallback className="rounded-lg">A</AvatarFallback>
                                     </Avatar>
                                     <div className="leading-tight">
-                                        <h4 className="truncate font-medium">Avip Syaifulloh</h4>
+                                        <h4 className="truncate font-medium">Handika Dwiputra</h4>
                                         <p className="text-muted-foreground truncate text-xs">
                                             Admin
                                         </p>
@@ -115,7 +116,7 @@ export default function AppSidebar() {
                                             <AvatarFallback className="rounded-lg">A</AvatarFallback>
                                         </Avatar>
                                         <div className="leading-tight">
-                                            <h4 className="truncate font-medium">Avip Syaifulloh</h4>
+                                            <h4 className="truncate font-medium">Handika Dwiputra</h4>
                                             <p className="text-muted-foreground truncate text-xs">
                                                 Admin
                                             </p>
@@ -124,7 +125,7 @@ export default function AppSidebar() {
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => signOut()}>
                                         <LogOut />
                                         Logout
                                     </DropdownMenuItem>
