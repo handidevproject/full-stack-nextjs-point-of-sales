@@ -31,7 +31,7 @@ type CreateClientOptions = {
  * @example
  * // Membuat client dengan hak akses admin
  * const supabaseAdmin = createClient({ isAdmin: true });
- * const { data } = await supabaseAdmin.from('users').select('*'); // Melewati RLS
+ * const { data } = await supabaseAdmin.from('user').select('*'); // Melewati RLS
  */
 export async function createClient({ isAdmin = false }: CreateClientOptions = {}) {
   const cookieStore = await cookies();
