@@ -1,5 +1,6 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from '@/constants/data-table-constant';
 import { useState } from 'react';
+import useDebounce from './use-debounce';
 
 /**
  * Custom hook untuk mengelola state paginasi pada data table.
@@ -19,6 +20,9 @@ export default function useDataTable() {
     // State untuk menyimpan batas jumlah data per halaman, diinisialisasi dengan nilai default.
     const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
 
+    const [currentSearch, setCurrentSearch] = useState('');
+    const debounce = useDebounce();
+
     /**
      * Mengubah nilai halaman saat ini.
      * @param {number} page - Nomor halaman baru yang akan diatur.
@@ -37,10 +41,19 @@ export default function useDataTable() {
         setCurrentPage(DEFAULT_PAGE);
     };
 
+    const handleChangeSearch = (search: string) => {
+        debounce(() => {
+            setCurrentSearch(search);
+            setCurrentPage(DEFAULT_PAGE);
+        }, 500);
+    };
+
     return {
         currentPage,
         handleChangePage,
         currentLimit,
         handleChangeLimit,
+        currentSearch,
+        handleChangeSearch,
     };
 }
