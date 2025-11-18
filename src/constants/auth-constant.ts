@@ -3,8 +3,6 @@
  * Ini membantu menghindari "magic strings" dan menjaga konsistensi di seluruh aplikasi.
  */
 
-import { AuthFormState } from "@/types/auth";
-
 /**
  * Nilai awal untuk field-field pada form login.
  * Digunakan untuk menginisialisasi state form.
@@ -20,8 +18,19 @@ export const INITIAL_LOGIN_FORM = {
  *
  * @type {AuthFormState}
  */
-export const INITIAL_STATE_LOGIN_FORM: AuthFormState = {
-  status: "success", // Menggunakan 'success' sebagai status netral awal
-  errors: {},
-  message: "",
+export const INITIAL_STATE_LOGIN_FORM = {
+    status: 'idle',
+    errors: {
+        email: [],
+        password: [],
+        _form: [],
+    },
+};
+
+
+export const INITIAL_STATE_PROFILE = {
+    id: '',
+    name: '',
+    role: '',
+    avatar_url: '',
 };
