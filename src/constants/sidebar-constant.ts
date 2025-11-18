@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 export const SIDEBAR_MENU_LIST = {
-    admin: [
+    Administrator: [
         {
             title: 'Dashboard',
             url: '/admin',

@@ -36,6 +36,7 @@ export default function AppSidebar() {
     const { isMobile } = useSidebar();
     const pathname = usePathname();
     const profile = useAuthStore((state) => state.profile);
+    console.log('profile', profile);
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
