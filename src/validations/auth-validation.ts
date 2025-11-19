@@ -33,10 +33,10 @@ export const createUserSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     role: z.string().min(1, 'Role is required'),
     // Komentar untuk referensi: validasi untuk avatar_url bisa seperti ini
-    // avatar_url: z.union([
-    //   z.string().min(1, 'Image URL is required'),
-    //   z.instanceof(File),
-    // ]),
+    avatar_url: z.union([
+      z.string().min(1, 'Image URL is required'),
+      z.instanceof(File),
+    ]),
 });
 
 /**

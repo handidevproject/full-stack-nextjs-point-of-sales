@@ -1,6 +1,13 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { ChangeEvent } from 'react';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function getImageData(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files![0];
+    const displayUrl = URL.createObjectURL(file);
+    return { file, displayUrl };
 }

@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { AuthFormState } from '@/types/auth';
 import { createUserSchema } from '@/validations/auth-validation';
+import {uploadFile} from "@/actions/storage-action";
 
 /**
  * Server Action untuk membuat pengguna baru.
@@ -21,12 +22,12 @@ export async function createUser(
     formData: FormData,
 ): Promise<AuthFormState> {
     // 1. Validasi data dari form menggunakan skema Zod.
-    const validatedFields = createUserSchema.safeParse({
+    let validatedFields = createUserSchema.safeParse({
         email: formData.get('email'),
         password: formData.get('password'),
         name: formData.get('name'),
         role: formData.get('role'),
-        // avatar_url: formData.get('avatar_url'),
+        avatar_url: formData.get('avatar_url'),
     });
 
     // 2. Jika validasi gagal, kembalikan pesan error yang terstruktur.
@@ -36,6 +37,30 @@ export async function createUser(
             errors: {
                 ...validatedFields.error.flatten().fieldErrors,
                 _form: [], // Error umum untuk form
+            },
+        };
+    }
+    if (validatedFields.data.avatar_url instanceof File) {
+        const { errors, data } = await uploadFile(
+            'images',
+            'users',
+            validatedFields.data.avatar_url,
+        );
+        if (errors) {
+            return {
+                status: 'error',
+                errors: {
+                    ...prevState.errors,
+                    _form: [...errors._form],
+                },
+            };
+        }
+
+        validatedFields = {
+            ...validatedFields,
+            data: {
+                ...validatedFields.data,
+                avatar_url: data.url,
             },
         };
     }
