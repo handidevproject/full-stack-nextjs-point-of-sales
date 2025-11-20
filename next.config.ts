@@ -8,10 +8,6 @@ const nextConfig: NextConfig = {
     },
     devIndicators: false,
     images: {
-        domains: [
-            'https://agjsdosiwtwjwmnflgwc.storage.supabase.co',
-            'www.eatingbirdfood.com'
-        ],
         remotePatterns: [
             {
                 protocol: 'https',
