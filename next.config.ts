@@ -8,11 +8,38 @@ const nextConfig: NextConfig = {
     },
     devIndicators: false,
     images: {
-        domains: ['https://agjsdosiwtwjwmnflgwc.supabase.co'],
+        domains: [
+            'https://agjsdosiwtwjwmnflgwc.storage.supabase.co',
+            'www.eatingbirdfood.com'
+        ],
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'agjsdosiwtwjwmnflgwc.supabase.co',
+                hostname: 'agjsdosiwtwjwmnflgwc.storage.supabase.co',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.eatingbirdfood.com',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.shutterstock.com',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.forkinthekitchen.com',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'syruvia.com',
                 port: '',
                 pathname: '/**',
             },
