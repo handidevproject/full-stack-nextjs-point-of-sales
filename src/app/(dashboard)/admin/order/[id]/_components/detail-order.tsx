@@ -1,5 +1,3 @@
-'use client';
-
 import DataTable from '@/components/common/data-table';
 import { Button } from '@/components/ui/button';
 import { HEADER_TABLE_DETAIL_ORDER } from '@/constants/order-constant';
@@ -101,7 +99,7 @@ export default function DetailOrder({ id }: { id: string }) {
         <div className="w-full space-y-4">
             <div className="flex items-center justify-between gap-4 w-full">
                 <h1 className="text-2xl font-bold">Detail Order</h1>
-                <Link href="">
+                <Link href={`/order/${id}/add`}>
                     <Button>Add Order Item</Button>
                 </Link>
             </div>
