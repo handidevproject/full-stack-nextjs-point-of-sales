@@ -49,8 +49,6 @@ export const INITIAL_STATE_UPDATE_USER = {
     },
 };
 
-
-
 export const ROLE_LIST = [
     {
         value: 'admin',
@@ -63,5 +61,16 @@ export const ROLE_LIST = [
     {
         value: 'cashier',
         label: 'Cashier',
+    },
+];
+
+export const AVAILABILITY_LIST = [
+    {
+        value: 'true',
+        label: 'Available',
+    },
+    {
+        value: 'false',
+        label: 'Not Available',
     },
 ];
