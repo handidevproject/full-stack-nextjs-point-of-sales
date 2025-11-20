@@ -32,6 +32,8 @@ export async function createMenu(prevState: MenuFormState, formData: FormData) {
             'menus',
             validatedFields.data.image_url,
         );
+        console.log(`error - image_url: ${errors?._form}`);
+        console.log(`error - image_url: ${validatedFields.data.image_url}`);
         if (errors) {
             return {
                 status: 'error',
@@ -64,6 +66,7 @@ export async function createMenu(prevState: MenuFormState, formData: FormData) {
     });
 
     if (error) {
+        console.log(`error: ${error.stack?.toString()}`);
         return {
             status: 'error',
             errors: {

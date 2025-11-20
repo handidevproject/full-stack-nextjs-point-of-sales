@@ -11,32 +11,27 @@ const nextConfig: NextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'agjsdosiwtwjwmnflgwc.storage.supabase.co',
-                port: '',
-                pathname: '/**',
+                hostname: 'agjsdosiwtwjwmnflgwc.supabase.co',
+                pathname: '/storage/v1/object/public/**',
             },
             {
                 protocol: 'https',
                 hostname: 'www.eatingbirdfood.com',
-                port: '',
                 pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'www.shutterstock.com',
-                port: '',
                 pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'www.forkinthekitchen.com',
-                port: '',
                 pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'syruvia.com',
-                port: '',
                 pathname: '/**',
             },
         ],

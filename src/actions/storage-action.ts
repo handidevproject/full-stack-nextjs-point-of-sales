@@ -16,6 +16,7 @@ export async function uploadFile(
     if (prevPath) {
         const { error } = await supabase.storage.from(bucket).remove([prevPath]);
         if (error) {
+            console.log(`storage-action-uploadFile: error remove file ${error.message}`);
             return {
                 status: 'error',
                 errors: {
@@ -27,6 +28,7 @@ export async function uploadFile(
 
     const { error } = await supabase.storage.from(bucket).upload(newPath, file);
     if (error) {
+        console.log(`storage-action-uploadFile: error remove file2 ${error.message}`);
         return {
             status: 'error',
             errors: {
